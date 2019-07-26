@@ -8,8 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'NdefLibrary'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of NdefLibrary.'
+  s.version          = '0.0.0.1'
+  s.summary          = 'Parse and compose NDEF messages on iOS without CoreNFC.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,17 +18,19 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+This library is intended for use in applications that use external NFC readers (such as TapTrack Tappy 
+readers) from which NDEF messages must be validated, parsed, and composed.
                        DESC
 
-  s.homepage         = 'https://github.com/alice-cai/NdefLibrary'
+  s.homepage         = 'https://github.com/TapTrack/NdefLibrary'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'alice-cai' => 'david.shalaby@taptrack.com' }
-  s.source           = { :git => 'https://github.com/alice-cai/NdefLibrary.git', :tag => s.version.to_s }
+  s.author           = { 'alice-cai' => 'info@taptrack.com' }
+  s.source           = { :git => 'https://github.com/TapTrack/NdefLibrary.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
+  s.swift_version = "4.2"
 
   s.source_files = 'NdefLibrary/Classes/**/*'
   

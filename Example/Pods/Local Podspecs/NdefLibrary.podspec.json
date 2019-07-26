@@ -1,0 +1,22 @@
+{
+  "name": "NdefLibrary",
+  "version": "0.1.0",
+  "summary": "A short description of NdefLibrary.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/alice-cai/NdefLibrary",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "alice-cai": "david.shalaby@taptrack.com"
+  },
+  "source": {
+    "git": "https://github.com/alice-cai/NdefLibrary.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "NdefLibrary/Classes/**/*"
+}

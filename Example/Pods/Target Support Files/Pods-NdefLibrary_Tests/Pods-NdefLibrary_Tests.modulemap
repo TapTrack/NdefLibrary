@@ -1,0 +1,6 @@
+framework module Pods_NdefLibrary_Tests {
+  umbrella header "Pods-NdefLibrary_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

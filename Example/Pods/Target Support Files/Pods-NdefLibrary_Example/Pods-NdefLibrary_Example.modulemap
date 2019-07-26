@@ -1,0 +1,6 @@
+framework module Pods_NdefLibrary_Example {
+  umbrella header "Pods-NdefLibrary_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

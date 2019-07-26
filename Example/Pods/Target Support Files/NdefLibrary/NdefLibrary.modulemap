@@ -1,0 +1,6 @@
+framework module NdefLibrary {
+  umbrella header "NdefLibrary-umbrella.h"
+
+  export *
+  module * { export * }
+}
