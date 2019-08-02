@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'NdefLibrary'
-  s.version          = '0.0.0.1'
+  s.version          = '1.0.0'
   s.summary          = 'Parse and compose NDEF messages on iOS without CoreNFC.'
 
 # This description is used to generate tags and improve search results.
@@ -25,7 +25,7 @@ readers) from which NDEF messages must be validated, parsed, and composed.
   s.homepage         = 'https://github.com/TapTrack/NdefLibrary'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'alice-cai' => 'info@taptrack.com' }
+  s.author           = { 'Alice Cai' => 'info@taptrack.com' }
   s.source           = { :git => 'https://github.com/TapTrack/NdefLibrary.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
