@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  NdefLibrary: e62a03c1f251feb8ae82b6e57c2b9e2d39da21fe
+  NdefLibrary: 74cc6a5ba73ab2a03cc2994ea3c6653e6fed07da
 
 PODFILE CHECKSUM: 55e95a2da8dc346595da096021b3638122b3af9d
 

@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  NdefLibrary
 //
-//  Created by alice-cai on 07/25/2019.
+//  Created by alice-cai on 08/02/2019.
 //  Copyright (c) 2019 alice-cai. All rights reserved.
 //
 
@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         return true
     }
