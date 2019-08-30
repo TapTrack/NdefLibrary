@@ -24,19 +24,19 @@ class NdefMessageTests: XCTestCase {
     func testSingleRecordParsing() {
         // message with single uri record
         let github : [UInt8] = [0xD1, 0x01, 0x0C, 0x55, 0x02, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2E, 0x63, 0x6F, 0x6D, 0x2F]; // github (uri)
-        XCTAssertNotNil(Ndef.CreateNdefMessage(rawByteArray: github));
-        let githubMsg = Ndef.CreateNdefMessage(rawByteArray: github);
+        XCTAssertNotNil(Ndef.makeNdefMessage(rawByteArray: github));
+        let githubMsg = Ndef.makeNdefMessage(rawByteArray: github);
         
         XCTAssert(githubMsg!.numRecords == 1);
         XCTAssert(githubMsg!.records[0] is UriRecord);
         if let uriRecord = githubMsg!.records[0] as? UriRecord {
-            XCTAssert(uriRecord.uri == "https://www.github.com/");
+            XCTAssert(uriRecord.uriString == "https://www.github.com/");
         }
         
         // message with single text record
         let helloWorldTextRecord : [UInt8] = [0xD1, 0x01, 0x11, 0x54, 0x02, 0x65, 0x6E, 0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77, 0x6F, 0x72, 0x6C, 0x64, 0x21, 0x21, 0x21];
-        XCTAssertNoThrow(Ndef.CreateNdefMessage(rawByteArray: helloWorldTextRecord));
-        let helloWorldMsg = Ndef.CreateNdefMessage(rawByteArray: helloWorldTextRecord);
+        XCTAssertNoThrow(Ndef.makeNdefMessage(rawByteArray: helloWorldTextRecord));
+        let helloWorldMsg = Ndef.makeNdefMessage(rawByteArray: helloWorldTextRecord);
         
         XCTAssert(helloWorldMsg!.numRecords == 1);
         if let textRecord = helloWorldMsg!.records[0] as? TextRecord {
@@ -51,21 +51,21 @@ class NdefMessageTests: XCTestCase {
         let instagramRawUriRecord : [UInt8] = [0x51, 0x01, 0x0F, 0x55, 0x02, 0x69, 0x6e, 0x73, 0x74, 0x61, 0x67, 0x72, 0x61, 0x6d, 0x2e, 0x63, 0x6f, 0x6d, 0x2f];
         
         let githubWristCoinInstagramRaw : [UInt8] = githubRawUriRecord + wristcoinRawUriRecord + instagramRawUriRecord;
-        XCTAssertNotNil(Ndef.CreateNdefMessage(rawByteArray: githubWristCoinInstagramRaw));
-        let githubWristCoinInstagramMsg = Ndef.CreateNdefMessage(rawByteArray: githubWristCoinInstagramRaw);
+        XCTAssertNotNil(Ndef.makeNdefMessage(rawByteArray: githubWristCoinInstagramRaw));
+        let githubWristCoinInstagramMsg = Ndef.makeNdefMessage(rawByteArray: githubWristCoinInstagramRaw);
         
         XCTAssert(githubWristCoinInstagramMsg!.numRecords == 3);
         XCTAssert(githubWristCoinInstagramMsg!.records[0] is UriRecord);
         if let uriRecord = githubWristCoinInstagramMsg!.records[0] as? UriRecord {
-            XCTAssert(uriRecord.uri == "https://www.github.com/");
+            XCTAssert(uriRecord.uriString == "https://www.github.com/");
         }
         XCTAssert(githubWristCoinInstagramMsg!.records[1] is UriRecord);
         if let uriRecord = githubWristCoinInstagramMsg!.records[1] as? UriRecord {
-            XCTAssert(uriRecord.uri == "http://www.mywristcoin.com");
+            XCTAssert(uriRecord.uriString == "http://www.mywristcoin.com");
         }
         XCTAssert(githubWristCoinInstagramMsg!.records[2] is UriRecord);
         if let uriRecord = githubWristCoinInstagramMsg!.records[2] as? UriRecord {
-            XCTAssert(uriRecord.uri == "https://www.instagram.com/");
+            XCTAssert(uriRecord.uriString == "https://www.instagram.com/");
         }
     }
     
@@ -74,8 +74,8 @@ class NdefMessageTests: XCTestCase {
         let salutRawTextRecord : [UInt8] = [0x51, 0x01, 0x11, 0x54, 0x02, 0x66, 0x72, 0x73, 0x61, 0x6C, 0x75, 0x74, 0x21, 0x20, 0xC3, 0xA7, 0x61, 0x20, 0x76, 0x61, 0x3F]; // salut! ça va?
         
         let helloSalutRawMsg : [UInt8] = helloWorldRawTextRecord + salutRawTextRecord;
-        XCTAssertNotNil(Ndef.CreateNdefMessage(rawByteArray: helloSalutRawMsg));
-        let helloSalutMsg = Ndef.CreateNdefMessage(rawByteArray: helloSalutRawMsg);
+        XCTAssertNotNil(Ndef.makeNdefMessage(rawByteArray: helloSalutRawMsg));
+        let helloSalutMsg = Ndef.makeNdefMessage(rawByteArray: helloSalutRawMsg);
         
         XCTAssert(helloSalutMsg!.numRecords == 2);
         XCTAssert(helloSalutMsg!.records[0] is TextRecord);
@@ -93,8 +93,8 @@ class NdefMessageTests: XCTestCase {
         let rawGenericRecord2 : [UInt8] = [0x55, 0x01, 0x01, 0x02, 0x12];
         
         let rawGenericMessage : [UInt8] = rawGenericRecord1 + rawGenericRecord2;
-        XCTAssertNotNil(Ndef.CreateNdefMessage(rawByteArray: rawGenericMessage));
-        let genericMessage = Ndef.CreateNdefMessage(rawByteArray: rawGenericMessage);
+        XCTAssertNotNil(Ndef.makeNdefMessage(rawByteArray: rawGenericMessage));
+        let genericMessage = Ndef.makeNdefMessage(rawByteArray: rawGenericMessage);
         
         XCTAssert(genericMessage!.numRecords == 2);
         XCTAssert(genericMessage!.records[0].payload == [0x11]);
@@ -109,8 +109,8 @@ class NdefMessageTests: XCTestCase {
         let wristcoinRawUriRecord : [UInt8] = [0x51, 0x01, 0x10, 0x55, 0x01, 0x6D, 0x79, 0x77, 0x72, 0x69, 0x73, 0x74, 0x63, 0x6F, 0x69, 0x6E, 0x2E, 0x63, 0x6F, 0x6D];
         
         let rawMultiTypeMessage : [UInt8] = helloWorldRawTextRecord + rawGenericRecord1 + githubRawUriRecord + salutRawTextRecord + wristcoinRawUriRecord;
-        XCTAssertNotNil(Ndef.CreateNdefMessage(rawByteArray: rawMultiTypeMessage));
-        let multiTypeMessage = Ndef.CreateNdefMessage(rawByteArray: rawMultiTypeMessage);
+        XCTAssertNotNil(Ndef.makeNdefMessage(rawByteArray: rawMultiTypeMessage));
+        let multiTypeMessage = Ndef.makeNdefMessage(rawByteArray: rawMultiTypeMessage);
         
         XCTAssert(multiTypeMessage!.numRecords == 5);
         XCTAssert(multiTypeMessage!.records[0] is TextRecord);
@@ -123,7 +123,7 @@ class NdefMessageTests: XCTestCase {
         }
         XCTAssert(multiTypeMessage!.records[2] is UriRecord);
         if let uriRecord = multiTypeMessage!.records[2] as? UriRecord {
-            XCTAssert(uriRecord.uri == "https://www.github.com/");
+            XCTAssert(uriRecord.uriString == "https://www.github.com/");
         }
         XCTAssert(multiTypeMessage!.records[3] is TextRecord);
         if let textRecord = multiTypeMessage!.records[3] as? TextRecord {
@@ -131,7 +131,7 @@ class NdefMessageTests: XCTestCase {
         }
         XCTAssert(multiTypeMessage!.records[4] is UriRecord);
         if let uriRecord = multiTypeMessage!.records[4] as? UriRecord {
-            XCTAssert(uriRecord.uri == "http://www.mywristcoin.com");
+            XCTAssert(uriRecord.uriString == "http://www.mywristcoin.com");
         }
     }
     
@@ -144,8 +144,8 @@ class NdefMessageTests: XCTestCase {
             longTextRecordText += "!";
         }
         
-        XCTAssertNotNil(Ndef.CreateNdefMessage(rawByteArray: longTextRecordRaw));
-        let longTextRecordMsg = Ndef.CreateNdefMessage(rawByteArray: longTextRecordRaw);
+        XCTAssertNotNil(Ndef.makeNdefMessage(rawByteArray: longTextRecordRaw));
+        let longTextRecordMsg = Ndef.makeNdefMessage(rawByteArray: longTextRecordRaw);
         
         XCTAssert(longTextRecordMsg!.numRecords == 1);
         XCTAssert(longTextRecordMsg!.records[0] is TextRecord);
@@ -160,13 +160,13 @@ class NdefMessageTests: XCTestCase {
         let salutRawTextRecordLong : [UInt8] = [0b01000001, 0x01, 0x00, 0x00, 0x00, 0x11, 0x54, 0x02, 0x66, 0x72, 0x73, 0x61, 0x6C, 0x75, 0x74, 0x21, 0x20, 0xC3, 0xA7, 0x61, 0x20, 0x76, 0x61, 0x3F]; // salut! ça va?
         
         let rawMultiLengthMsg : [UInt8] = githubRawUriRecordLong + helloWorldRawTextRecordShort + salutRawTextRecordLong;
-        XCTAssertNotNil(Ndef.CreateNdefMessage(rawByteArray: rawMultiLengthMsg));
-        let multiLengthMsg = Ndef.CreateNdefMessage(rawByteArray: rawMultiLengthMsg);
+        XCTAssertNotNil(Ndef.makeNdefMessage(rawByteArray: rawMultiLengthMsg));
+        let multiLengthMsg = Ndef.makeNdefMessage(rawByteArray: rawMultiLengthMsg);
         
         XCTAssert(multiLengthMsg!.numRecords == 3);
         XCTAssert(multiLengthMsg!.records[0] is UriRecord);
         if let uriRecord = multiLengthMsg!.records[0] as? UriRecord {
-            XCTAssert(uriRecord.uri == "https://www.github.com/");
+            XCTAssert(uriRecord.uriString == "https://www.github.com/");
         }
         XCTAssert(multiLengthMsg!.records[1] is TextRecord);
         if let textRecord = multiLengthMsg!.records[1] as? TextRecord {
@@ -180,44 +180,44 @@ class NdefMessageTests: XCTestCase {
     
     func testParsingErrors() {
         // NdefMessage.MessageParsingError.rawByteArrayTooShort
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: []));
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0x00]));
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0x00, 0x00]));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: []));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0x00]));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0x00, 0x00]));
         
         // NdefMessage.MessageParsingError.multipleMessageBeginFlags
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0b10010001, 0x00, 0x00, 0b10010001]));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0b10010001, 0x00, 0x00, 0b10010001]));
         
         // NdefMessage.MessageParsingError.messageBeginFlagMissing
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0b00010001, 0x00, 0x00]));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0b00010001, 0x00, 0x00]));
         
         // note: not testing for this error because it can only occur when chunked records are supported
         // NdefMessage.MessageParsingError.multipleMessageEndFlags
-        // XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0b10010001, 0x00, 0x00, 0b01110001, 0x00, 0x00, 0b01110001]));
+        // XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0b10010001, 0x00, 0x00, 0b01110001, 0x00, 0x00, 0b01110001]));
         
         // NdefMessage.MessageParsingError.chunkedRecordsNotSupported
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0b10110001, 0x00, 0x00]));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0b10110001, 0x00, 0x00]));
         
         // NdefMessage.MessageParsingError.typeLengthMissing
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0b10010001, 0x00, 0x00, 0b00010001]));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0b10010001, 0x00, 0x00, 0b00010001]));
         
         // NdefMessage.MessageParsingError.payloadLengthMissing
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0b10010001, 0x00, 0x00, 0b00010001, 0x00]));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0b10010001, 0x00, 0x00, 0b00010001, 0x00]));
         
         // NdefMessage.MessageParsingError.idLengthMissing
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0b10011001, 0x00, 0x00]));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0b10011001, 0x00, 0x00]));
         
         // NdefMessage.MessageParsingError.typeFieldMissing
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0b10010001, 0x01, 0x00]));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0b10010001, 0x01, 0x00]));
         
         // NdefMessage.MessageParsingError.idFieldMissing
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0b10011001, 0x00, 0x00, 0x01]));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0b10011001, 0x00, 0x00, 0x01]));
         
         // NdefMessage.MessageParsingError.payloadFieldMissing
-        XCTAssertNil(Ndef.CreateNdefMessage(rawByteArray: [0b10010001, 0x00, 0x01]));
+        XCTAssertNil(Ndef.makeNdefMessage(rawByteArray: [0b10010001, 0x00, 0x01]));
     }
     
     func testEmptyMessageToByteArray() {
-        let emptyMessage = Ndef.CreateNdefMessage();
+        let emptyMessage = Ndef.makeNdefMessage();
         XCTAssertNotNil(emptyMessage);
         XCTAssert(emptyMessage.toByteArray() == []);
     }
@@ -227,26 +227,26 @@ class NdefMessageTests: XCTestCase {
         let githubUrlRecordHeader : [UInt8] = [0b10011001, 0x01, 0x0C, 0x07, 0x55, 0x6f, 0x63, 0x74, 0x6f, 0x63, 0x61, 0x74];
         let githubUrlRecordPayload : [UInt8] = [0x02, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2E, 0x63, 0x6F, 0x6D, 0x2F];
         let rawGithubUrlRecord : [UInt8] = githubUrlRecordHeader + githubUrlRecordPayload;
-        let githubUrlRecord = Ndef.CreateUriRecord(uri: "https://www.github.com/", id: "octocat");
+        let githubUrlRecord = Ndef.makeUriRecord(uri: "https://www.github.com/", id: "octocat");
         XCTAssertNotNil(githubUrlRecord);
         
         // Construct GenericRecord.
         let genericRecordHeader : [UInt8] = [0b00010010, 0x01, 0x01, 0x02];
         let genericRecordPayload : [UInt8] = [0x11];
         let rawGenericRecord : [UInt8] = genericRecordHeader + genericRecordPayload;
-        let genericRecord = Ndef.CreateGenericRecord(tnf: Ndef.TypeNameFormat.mimeMedia, type: [0x02], payload: [0x11]);
+        let genericRecord = Ndef.makeGenericRecord(tnf: TypeNameFormat.mimeMedia, type: [0x02], payload: [0x11]);
         XCTAssertNotNil(genericRecord);
         
         // Construct TextRecord.
         let helloWorldRecordHeader : [UInt8] = [0b01010001, 0x01, 0x11, 0x54];
         let helloWorldRecordPayload : [UInt8] = [0x02, 0x65, 0x6E, 0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77, 0x6F, 0x72, 0x6C, 0x64, 0x21, 0x21, 0x21];
         let rawHelloWorldRecord : [UInt8] = helloWorldRecordHeader + helloWorldRecordPayload;
-        let helloWorldRecord = Ndef.CreateTextRecord(payload: helloWorldRecordPayload);
+        let helloWorldRecord = Ndef.makeTextRecord(payload: helloWorldRecordPayload);
         XCTAssertNotNil(helloWorldRecord);
         
         // Construct NdefMessage and check return value of toByteArray().
         let rawMessage : [UInt8] = rawGithubUrlRecord + rawGenericRecord + rawHelloWorldRecord;
-        let message = Ndef.CreateNdefMessage(records: [githubUrlRecord, genericRecord!, helloWorldRecord!]);
+        let message = Ndef.makeNdefMessage(records: [githubUrlRecord, genericRecord!, helloWorldRecord!]);
         XCTAssert(message.toByteArray() == rawMessage);
     }
     
@@ -263,30 +263,30 @@ class NdefMessageTests: XCTestCase {
         }
         let rawLongTextRecord : [UInt8] = longTextRecordHeader + longTextRecordPayload;
         
-        let longTextRecord = Ndef.CreateTextRecord(payload: longTextRecordPayload);
+        let longTextRecord = Ndef.makeTextRecord(payload: longTextRecordPayload);
         XCTAssertNotNil(longTextRecord);
         
         // Construct UriRecord (short).
         let githubUrlRecordHeader : [UInt8] = [0b01011001, 0x01, 0x0C, 0x07, 0x55, 0x6f, 0x63, 0x74, 0x6f, 0x63, 0x61, 0x74];
         let githubUrlRecordPayload : [UInt8] = [0x02, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2E, 0x63, 0x6F, 0x6D, 0x2F];
         let rawGithubUrlRecord : [UInt8] = githubUrlRecordHeader + githubUrlRecordPayload;
-        let githubUrlRecord = Ndef.CreateUriRecord(uri: "https://www.github.com/", id: "octocat");
+        let githubUrlRecord = Ndef.makeUriRecord(uri: "https://www.github.com/", id: "octocat");
         XCTAssertNotNil(githubUrlRecord);
         
         // Construct NdefMessage and check return value of toByteArray().
         let rawMessage : [UInt8] = rawLongTextRecord + rawGithubUrlRecord;
-        let message = Ndef.CreateNdefMessage(records: [longTextRecord!, githubUrlRecord]);
+        let message = Ndef.makeNdefMessage(records: [longTextRecord!, githubUrlRecord]);
         XCTAssert(message.toByteArray() == rawMessage);
     }
     
     func testAppendRecord() {
-        let textRecord = Ndef.CreateTextRecord(textEncoding: TextRecord.TextEncodingType.Utf8, languageCode: "en", text: "");
+        let textRecord = Ndef.makeTextRecord(textEncoding: TextEncodingType.Utf8, languageCode: "en", text: "");
         XCTAssertNotNil(textRecord);
-        let uriRecord = Ndef.CreateUriRecord(uri: "");
-        let genericRecord = Ndef.CreateGenericRecord(tnf: Ndef.TypeNameFormat.unknown, type: [0x02], payload: []);
+        let uriRecord = Ndef.makeUriRecord(uri: "");
+        let genericRecord = Ndef.makeGenericRecord(tnf: TypeNameFormat.unknown, type: [0x02], payload: []);
         XCTAssertNotNil(genericRecord);
         
-        let message = Ndef.CreateNdefMessage();
+        let message = Ndef.makeNdefMessage();
         XCTAssert(message.numRecords == 0);
         XCTAssert(message.records.count == 0);
         
@@ -304,13 +304,13 @@ class NdefMessageTests: XCTestCase {
     }
     
     func testInsertRecord() {
-        let textRecord = Ndef.CreateTextRecord(textEncoding: TextRecord.TextEncodingType.Utf8, languageCode: "en", text: "");
+        let textRecord = Ndef.makeTextRecord(textEncoding: TextEncodingType.Utf8, languageCode: "en", text: "");
         XCTAssertNotNil(textRecord);
-        let uriRecord = Ndef.CreateUriRecord(uri: "");
-        let genericRecord = Ndef.CreateGenericRecord(tnf: Ndef.TypeNameFormat.unknown, type: [0x02], payload: []);
+        let uriRecord = Ndef.makeUriRecord(uri: "");
+        let genericRecord = Ndef.makeGenericRecord(tnf: TypeNameFormat.unknown, type: [0x02], payload: []);
         XCTAssertNotNil(genericRecord);
         
-        let message = Ndef.CreateNdefMessage(records: [textRecord!]);
+        let message = Ndef.makeNdefMessage(records: [textRecord!]);
         XCTAssert(message.numRecords == 1);
         XCTAssert(message.records[0] is TextRecord);
         
@@ -327,13 +327,13 @@ class NdefMessageTests: XCTestCase {
     }
     
     func testRemoveRecord() {
-        let textRecord = Ndef.CreateTextRecord(textEncoding: TextRecord.TextEncodingType.Utf8, languageCode: "en", text: "");
+        let textRecord = Ndef.makeTextRecord(textEncoding: TextEncodingType.Utf8, languageCode: "en", text: "");
         XCTAssertNotNil(textRecord);
-        let uriRecord = Ndef.CreateUriRecord(uri: "");
-        let genericRecord = Ndef.CreateGenericRecord(tnf: Ndef.TypeNameFormat.unknown, type: [0x02], payload: []);
+        let uriRecord = Ndef.makeUriRecord(uri: "");
+        let genericRecord = Ndef.makeGenericRecord(tnf: TypeNameFormat.unknown, type: [0x02], payload: []);
         XCTAssertNotNil(genericRecord);
         
-        let message = Ndef.CreateNdefMessage(records: [textRecord!, uriRecord, genericRecord!]);
+        let message = Ndef.makeNdefMessage(records: [textRecord!, uriRecord, genericRecord!]);
         XCTAssert(message.numRecords == 3);
         XCTAssert(message.records[0] is TextRecord);
         XCTAssert(message.records[1] is UriRecord);

@@ -8,16 +8,15 @@
 
 import Foundation
 
-@objc
-public class UriRecord : NSObject, NdefRecord {
+public enum UriRecordValidationError: Error {
+    case payloadTooLong
+}
+
+@objc public class UriRecord: NSObject, NdefRecord {
     // The type of an NDEF URI record is "U" (binary encoding is 0x55).
-    public static let RecordType : [UInt8] = [0x55];
+    @objc public static let recordType: [UInt8] = [0x55]
     
-    public enum UriRecordValidationError : Error {
-        case payloadTooLong
-    }
-    
-    public static let PrefixProtocols : [String] =
+    @objc public static let prefixProtocols: [String] =
         ["",
          "http://www.",
          "https://www.",
@@ -53,175 +52,167 @@ public class UriRecord : NSObject, NdefRecord {
          "urn:epc:pat:",
          "urn:epc:raw:",
          "urn:epc:",
-         "urn:nfc:"];
+         "urn:nfc:"]
     
     
-    /* Required fields */
+    // MARK: - Required fields
     
-    public var tnf : UInt8 {
-        get {
-            return Ndef.TypeNameFormat.wellKnown.rawValue;
-        }
-    }
+    @objc public private(set) var tnf: UInt8 = TypeNameFormat.wellKnown.rawValue
     
-    public var type: [UInt8] {
-        get {
-            return UriRecord.RecordType;
-        }
-    }
+    @objc public private(set) var type: [UInt8] = UriRecord.recordType
     
-    private var _id : [UInt8]? = nil;
-    public var id: [UInt8]? {
+    private var _id: [UInt8]? = nil
+    @objc public var id: [UInt8]? {
         get {
             if (_id == nil) {
-                return nil;
+                return nil
             }
-            return _id!;
+            return _id!
         }
         
         set {
-            _id = newValue;
+            _id = newValue
         }
     }
     
-    private var _payload : [UInt8] = [];
-    public var payload: [UInt8] {
+    private var _payload: [UInt8] = []
+    @objc public var payload: [UInt8] {
         get {
-            return _payload;
+            return _payload
         }
         
         set {
-            _payload = newValue;
+            _payload = newValue
         }
     }
     
     
-    public var rawUri : [UInt8] {
+    @objc public var uri: [UInt8] {
         get {
             if payload.count == 0 {
-                return [];
+                return []
             }
             
-            var rawUri : [UInt8] = payload;
-            rawUri.removeFirst(1); // remove protocol prefix
-            return rawUri;
+            var _uri: [UInt8] = payload
+            _uri.removeFirst(1) // remove protocol prefix
+            return _uri
         }
     }
     
-    public var uri : String {
+    @objc public var uriString: String {
         get {
             if payload.count == 0 {
-                return "";
+                return ""
             }
             
-            let identifierCode = payload[0];
-            let protocolPrefix = UriRecord.GetProtocolFromCode(identifierCode);
+            let identifierCode = payload[0]
+            let protocolPrefix = UriRecord.getProtocolFromCode(identifierCode)
             
-            let uriString = String(bytes: payload[1..<payload.count], encoding: .utf8);
+            let _uriString = String(bytes: payload[1..<payload.count], encoding: .utf8)
             
-            if uriString != nil {
-                return protocolPrefix + uriString!;
+            if _uriString != nil {
+                return protocolPrefix + _uriString!
             }
-            return protocolPrefix;
+            return protocolPrefix
         }
         
         set(newUri) {
-            let identifierCode = UriRecord.GetCodeFromUri(newUri);
+            let identifierCode = UriRecord.getCodeFromUri(newUri)
             
-            let protocolLength : Int = UriRecord.PrefixProtocols[Int(identifierCode)].count;
+            let protocolLength: Int = UriRecord.prefixProtocols[Int(identifierCode)].count
             
             // substring the uri to get just the uri field from the string
-            let uriStartIndex = newUri.index(newUri.startIndex, offsetBy: protocolLength);
-            let newRawUri = String(newUri[uriStartIndex...]);
+            let uriStartIndex = newUri.index(newUri.startIndex, offsetBy: protocolLength)
+            let newRawUri = String(newUri[uriStartIndex...])
             
             // payload is identifier code + encoded uri field
-            var newPayload : [UInt8] = [identifierCode];
-            newPayload += Array(newRawUri.utf8); // convert to binary
+            var newPayload: [UInt8] = [identifierCode]
+            newPayload += Array(newRawUri.utf8) // convert to binary
             
-            payload = newPayload;
+            payload = newPayload
         }
     }
     
     
-    /* Constructors  */
+    // MARK: - Constructors
     
     internal override init() {
-        super.init();
+        super.init()
     }
     
     internal init(other: UriRecord) {
-        super.init();
+        super.init()
         
         if other.id == nil {
-            _id = nil;
+            _id = nil
         } else {
-            _id = other.id!;
+            _id = other.id!
         }
-        _payload = other.payload;
+        _payload = other.payload
     }
     
     internal init(payload: [UInt8], id: [UInt8]?) throws {
-        super.init();
+        super.init()
         
         if payload.count > UInt32.max {
-            throw UriRecordValidationError.payloadTooLong;
+            throw UriRecordValidationError.payloadTooLong
         }
         
         if id == nil {
-            _id = nil;
+            _id = nil
         } else {
-            _id = id!;
+            _id = id!
         }
-        _payload = payload;
+        _payload = payload
     }
     
     internal convenience init(payload: [UInt8]) throws {
-        let id : [UInt8]? = nil;
-        try self.init(payload: payload, id: id);
+        let id: [UInt8]? = nil
+        try self.init(payload: payload, id: id)
     }
     
     internal init(uri: String, id: String?) {
-        super.init();
+        super.init()
         if id == nil {
-            _id = nil;
+            _id = nil
         } else {
-            _id = Array(id!.utf8);
+            _id = Array(id!.utf8)
         }
         
-        self.uri = uri;
+        self.uriString = uri
     }
     
     internal convenience init(uri: String) {
-        self.init(uri: uri, id: nil);
+        self.init(uri: uri, id: nil)
     }
     
     
-    /* Methods */
+    // MARK: - Methods
     
-    public static func isRecordType(record: NdefRecord?) -> Bool {
+    @objc public static func isRecordType(record: NdefRecord?) -> Bool {
         if (record == nil) {
-            return false;
+            return false
         }
         
         if (record as? UriRecord) != nil {
-            return true;
+            return true
         }
-        return false;
+        return false
     }
     
-    private static func GetCodeFromUri(_ uri: String) -> UInt8 {
-        for i in 1 ..< PrefixProtocols.count {
-            if uri.starts(with: PrefixProtocols[i]) {
-                return UInt8(i);
+    private static func getCodeFromUri(_ uri: String) -> UInt8 {
+        for i in 1 ..< prefixProtocols.count {
+            if uri.starts(with: prefixProtocols[i]) {
+                return UInt8(i)
             }
         }
-        return 0x00;
+        return 0x00
     }
     
-    private static func GetProtocolFromCode(_ identifierCode: UInt8) -> String {
-        if identifierCode >= 0 && identifierCode < PrefixProtocols.count {
-            return PrefixProtocols[Int(identifierCode)];
+    private static func getProtocolFromCode(_ identifierCode: UInt8) -> String {
+        if identifierCode >= 0 && identifierCode < prefixProtocols.count {
+            return prefixProtocols[Int(identifierCode)]
         }
-        return "";
+        return ""
     }
 }

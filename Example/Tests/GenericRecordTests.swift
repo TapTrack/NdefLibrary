@@ -21,11 +21,11 @@ class GenericRecordTests: XCTestCase {
     }
     
     func testConstructor() {
-        let typeNameFormat = Ndef.TypeNameFormat.mimeMedia;
+        let typeNameFormat = TypeNameFormat.mimeMedia;
         let type : [UInt8] = [];
         let payload : [UInt8] = [0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65];
         
-        let genericRecord = Ndef.CreateGenericRecord(tnf: typeNameFormat, type: type, payload: payload);
+        let genericRecord = Ndef.makeGenericRecord(tnf: typeNameFormat, type: type, payload: payload);
         XCTAssertNotNil(genericRecord);
         
         XCTAssert(genericRecord!.tnf == typeNameFormat.rawValue);
@@ -35,13 +35,13 @@ class GenericRecordTests: XCTestCase {
     }
     
     func testConstructorId() {
-        let typeNameFormat = Ndef.TypeNameFormat.mimeMedia;
+        let typeNameFormat = TypeNameFormat.mimeMedia;
         let type : [UInt8] = [];
         let payload : [UInt8] = [0x65, 0x78, 0x61, 0x6d, 0x70, 0x6c, 0x65];
         let id : [UInt8] = [0x61, 0x62, 0x63, 0x64];
         
-        XCTAssertNotNil(Ndef.CreateGenericRecord(tnf: typeNameFormat, type: type, payload: payload, id: id));
-        let genericRecord = Ndef.CreateGenericRecord(tnf: typeNameFormat, type: type, payload: payload, id: id);
+        XCTAssertNotNil(Ndef.makeGenericRecord(tnf: typeNameFormat, type: type, payload: payload, id: id));
+        let genericRecord = Ndef.makeGenericRecord(tnf: typeNameFormat, type: type, payload: payload, id: id);
         
         XCTAssert(genericRecord!.tnf == typeNameFormat.rawValue);
         XCTAssert(genericRecord!.type == type);
@@ -51,19 +51,19 @@ class GenericRecordTests: XCTestCase {
     }
     
     func testDuplicateRecord() {
-        let genericRecord = Ndef.CreateGenericRecord(tnf: Ndef.TypeNameFormat.mimeMedia, type: [], payload: []);
+        let genericRecord = Ndef.makeGenericRecord(tnf: TypeNameFormat.mimeMedia, type: [], payload: []);
         XCTAssertNotNil(genericRecord);
-        XCTAssertNotNil(Ndef.CreateGenericRecord(other: genericRecord!));
+        XCTAssertNotNil(Ndef.makeGenericRecord(other: genericRecord!));
     }
     
     func testIsRecordType() {
-        let genericRecord = Ndef.CreateGenericRecord(tnf: Ndef.TypeNameFormat.mimeMedia, type: [], payload: []);
+        let genericRecord = Ndef.makeGenericRecord(tnf: TypeNameFormat.mimeMedia, type: [], payload: []);
         XCTAssertTrue(GenericRecord.isRecordType(record: genericRecord));
         
-        let textRecord = Ndef.CreateTextRecord(payload: [0x02, 0x65, 0x6E]);
+        let textRecord = Ndef.makeTextRecord(payload: [0x02, 0x65, 0x6E]);
         XCTAssertFalse(GenericRecord.isRecordType(record: textRecord!));
         
-        XCTAssertFalse(GenericRecord.isRecordType(record: Ndef.CreateUriRecord()));
+        XCTAssertFalse(GenericRecord.isRecordType(record: Ndef.makeUriRecord()));
     }
     
 }

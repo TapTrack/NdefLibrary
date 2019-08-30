@@ -7,6 +7,8 @@
 //
 
 import XCTest
+import NdefLibrary
+@testable import NdefLibrary
 
 class NdefLibraryTest: XCTestCase {
 
@@ -22,6 +24,27 @@ class NdefLibraryTest: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         XCTAssert(true, "Pass")
+    }
+    
+    func testReadme() {
+        // Empty NDEF record for example purposes.
+        let rawNdefMessage : [UInt8] = [0xD0, 0x00, 0x00]
+        
+        // Construct an NdefMessage from a raw byte array. If the raw byte array does
+        // not represent a valid, complete NDEF message, this method will return nil.
+        let message = Ndef.makeNdefMessage(rawByteArray: rawNdefMessage)
+        
+        // Unwrap the message and get the array of records.
+        var records : [NdefRecord] = []
+        if let unwrappedMsg = message {
+            records = unwrappedMsg.records
+        }
+        
+        for record in records {
+            NSLog("Type Name Format: \(record.tnf)")
+            NSLog("Type: \(record.type)")
+            NSLog("Payload: \(record.payload)")
+        }
     }
 
     func testPerformanceExample() {

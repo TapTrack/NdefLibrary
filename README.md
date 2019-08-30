@@ -1,8 +1,11 @@
 # NdefLibrary
 
+![Travis CI](https://travis-ci.org/TapTrack/NdefLibrary.svg?branch=master)
 [![Version](https://img.shields.io/cocoapods/v/NdefLibrary.svg?style=flat)](https://cocoapods.org/pods/NdefLibrary)
 [![License](https://img.shields.io/cocoapods/l/NdefLibrary.svg?style=flat)](https://github.com/angular/angular.js/blob/master/LICENSE)
 [![Platform](https://img.shields.io/cocoapods/p/NdefLibrary.svg?style=flat)](https://cocoapods.org/pods/NdefLibrary)
+![Xcode](https://img.shields.io/badge/Xcode-10.2.1-brightgreen.svg)
+![Swift](https://img.shields.io/badge/Swift-4.2-brightgreen.svg)
 
 ## Description
 
@@ -40,7 +43,7 @@ let text : String = "hello world!"
 let textRecord = Ndef.CreateTextRecord(textEncoding: encoding, languageCode: languageCode, text: text)
 ```
 
-You can create a TextRecord from a raw byte array by passing it to the ```CreateNdefMessage``` method (see [Parsing Messages](#parsing-raw-ndef-messages) below).
+You can create a TextRecord from a raw byte array by passing it to the `Ndef.makeNdefMessage(rawByteArray:)` function (see [Parsing Raw NDEF Messages](#parsing-raw-ndef-messages) below).
 
 #### URI Records
 
@@ -53,11 +56,11 @@ let githubUrl = "https://www.github.com/"
 let uriRecord = Ndef.CreateUriRecord(uri: githubUrl)
 ```
 
-You can create a UriRecord from a raw byte array by passing it to the ```CreateNdefMessage``` method (see [Parsing Messages](#parsing-raw-ndef-messages) below).
+You can create a UriRecord from a raw byte array by passing it to the `Ndef.makeNdefMessage(rawByteArray:)` function (see [Parsing Messages](#parsing-raw-ndef-messages) below).
 
 #### Generic Records
 
-To create a record of any other type, you can use the ```GenericRecord``` object. You will need to specify the Type Name Format, the record type, and the payload.
+To create a record of any other type, you can use the `GenericRecord` object. You will need to specify the Type Name Format, the record type, and the payload.
 
 ```Swift
 let tnf = Ndef.TypeNameFormat.external
@@ -79,7 +82,7 @@ let myRecords : [NdefRecord] = [record1, record2, record3]
 let message = Ndef.CreateNdefMessage(records: myRecords)
 ```
 
-You can also convert the ```NdefMessage``` object into a raw byte array by calling the ```toByteArray()``` instance method.
+You can also convert the `NdefMessage` object into a raw byte array by calling the `toByteArray()` instance method.
 
 ```Swift
 let rawMessage = message.toByteArray()
@@ -87,9 +90,9 @@ let rawMessage = message.toByteArray()
 
 ### Parsing Raw NDEF Messages
 
-You can parse raw NDEF messages by passing the raw byte array to the ```CreateNdefMessage(rawByteArray: [UInt8])``` method. It will return an ```NdefMessage``` object that contains an array of NDEF records, which you can access though the ```records``` field.
+You can parse raw NDEF messages by passing the raw byte array to the `Ndef.makeNdefMessage(rawByteArray:)` function. It will return an `NdefMessage` object that contains an array of NDEF records, which you can access though the `records` field.
 
-*Note: Chunked records are not currently supported. The ```CreateNdefMessage``` method will return ```nil``` if it encounters a record with the chunked flag set.*
+*Note: Chunked records are not currently supported. The `Ndef.makeNdefMessage(rawByteArray:)` function will return `nil` if it encounters a record with the chunked flag set.*
 
 ```Swift
 // Empty NDEF record for example purposes.
@@ -135,7 +138,7 @@ if let uriRecord = records[1] as? UriRecord {
 
 ### Optional Return Values
 
-Note that some of the record constructing methods will return optional values that must be unwrapped before use. See below for examples of unwrapping. You can also refer to the [official Swift documentation](https://docs.swift.org/swift-book/LanguageGuide/OptionalChaining.html) for a more detailed explanation.
+Note that some of the record constructing functions will return optional values that must be unwrapped before use. See above for examples of unwrapping. You can also refer to the [official Swift documentation](https://docs.swift.org/swift-book/LanguageGuide/OptionalChaining.html) for a more detailed explanation.
 
 ## Contributors
 

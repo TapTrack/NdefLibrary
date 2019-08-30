@@ -7,24 +7,14 @@
 //
 
 import Foundation
-@objc
 
-public final class Ndef : NSObject {
-    // All valid values for the TNF field of an NDEF record (the TNF value is
-    // indicated by the three least significant bits of the first record byte).
-    public enum TypeNameFormat : UInt8 {
-        case empty = 0x00
-        case wellKnown = 0x01
-        case mimeMedia = 0x02
-        case absoluteUri = 0x03
-        case external = 0x04
-        case unknown = 0x05
-        case unchanged = 0x06
-        case reserved = 0x07
-    }
+// Development note: These factory methods are nested in the Ndef class (instead of
+// being declared as top-level functions) because otherwise they could not be marked
+// with the @objc attribute.
+
+@objc public class Ndef: NSObject {
     
-    
-    /* Text record methods */
+    // MARK: - Text record methods
     
     /**
      Creates a TextRecord by copying the fields of an existing TextRecord object.
@@ -33,8 +23,8 @@ public final class Ndef : NSObject {
      
      - Returns: A new TextRecord object with the same fields as the argument TextRecord object.
      */
-    public static func CreateTextRecord(other: TextRecord) -> TextRecord {
-        return TextRecord(other: other);
+    @objc public static func makeTextRecord(other: TextRecord) -> TextRecord {
+        return TextRecord(other: other)
     }
     
     
@@ -47,22 +37,22 @@ public final class Ndef : NSObject {
      - Returns: A new TextRecord object with the specified fields or nil if the fields
      are invalid.
      */
-    public static func CreateTextRecord(payload: [UInt8], id: [UInt8]?) -> TextRecord? {
+    @objc public static func makeTextRecord(payload: [UInt8], id: [UInt8]?) -> TextRecord? {
         do {
             return (id == nil) ? try TextRecord(payload: payload) :
-                try TextRecord(payload: payload, id: id);
-        } catch TextRecord.TextRecordValidationError.languageCodeMissing {
-            print("Error: Language code cannot be omitted.");
-        } catch TextRecord.TextRecordValidationError.languageCodeExceedsMaxLength {
-            print("Error: Language code exceeds maximum length.");
-        } catch TextRecord.TextRecordValidationError.payloadTooShort {
-            print("Error: Payload is not long enough to contain specified language code length.");
-        } catch TextRecord.TextRecordValidationError.payloadTooLong {
-            print("Error: Payload exceeds maximum length.");
+                try TextRecord(payload: payload, id: id)
+        } catch TextRecordValidationError.languageCodeMissing {
+            NSLog("Error: Language code cannot be omitted.")
+        } catch TextRecordValidationError.languageCodeExceedsMaxLength {
+            NSLog("Error: Language code exceeds maximum length.")
+        } catch TextRecordValidationError.payloadTooShort {
+            NSLog("Error: Payload is not long enough to contain specified language code length.")
+        } catch TextRecordValidationError.payloadTooLong {
+            NSLog("Error: Payload exceeds maximum length.")
         } catch {
-            print("Unexpected error: \(error).");
+            NSLog("Unexpected error: \(error).")
         }
-        return nil;
+        return nil
     }
     
     
@@ -73,8 +63,8 @@ public final class Ndef : NSObject {
      
      - Returns: A new TextRecord object with the specified payload or nil if the payload is invalid.
      */
-    public static func CreateTextRecord(payload: [UInt8]) -> TextRecord? {
-        return CreateTextRecord(payload: payload, id: nil);
+    @objc public static func makeTextRecord(payload: [UInt8]) -> TextRecord? {
+        return makeTextRecord(payload: payload, id: nil)
     }
     
     
@@ -90,19 +80,19 @@ public final class Ndef : NSObject {
      
      - Returns: A new TextRecord object with the specified information or nil if the information is invalid.
      */
-    public static func CreateTextRecord(textEncoding: TextRecord.TextEncodingType, languageCode: String,
-                                        text: String, id: String?) -> TextRecord? {
+    @objc public static func makeTextRecord(textEncoding: TextEncodingType, languageCode: String,
+                                     text: String, id: String?) -> TextRecord? {
         do {
             return try TextRecord(textEncoding: textEncoding, languageCode: languageCode,
-                                  text: text, id: id);
-        } catch TextRecord.TextRecordValidationError.languageCodeMissing {
-            print("Error: Language code cannot be omitted.");
-        } catch TextRecord.TextRecordValidationError.languageCodeExceedsMaxLength {
-            print("Error: Language code exceeds maximum length.");
+                                  text: text, id: id)
+        } catch TextRecordValidationError.languageCodeMissing {
+            NSLog("Error: Language code cannot be omitted.")
+        } catch TextRecordValidationError.languageCodeExceedsMaxLength {
+            NSLog("Error: Language code exceeds maximum length.")
         } catch {
-            print("Unexpected error: \(error).");
+            NSLog("Unexpected error: \(error).")
         }
-        return nil;
+        return nil
     }
     
     
@@ -117,23 +107,22 @@ public final class Ndef : NSObject {
      
      - Returns: A new TextRecord object with the specified information or nil if the information is invalid.
      */
-    public static func CreateTextRecord(textEncoding: TextRecord.TextEncodingType, languageCode: String,
-                                        text: String) -> TextRecord? {
-        return CreateTextRecord(textEncoding: textEncoding, languageCode: languageCode, text: text, id: nil);
+    @objc public static func makeTextRecord(textEncoding: TextEncodingType, languageCode: String,
+                                     text: String) -> TextRecord? {
+        return makeTextRecord(textEncoding: textEncoding, languageCode: languageCode, text: text, id: nil)
     }
     
     
     
-    /* URI record methods */
-    
+    // MARK: - URI record methods
     
     /**
      Creates a UriRecord object.
      
      - Returns: A UriRecord object with an empty payload.
      */
-    public static func CreateUriRecord() -> UriRecord {
-        return UriRecord();
+    @objc public static func makeUriRecord() -> UriRecord {
+        return UriRecord()
     }
     
     
@@ -144,8 +133,8 @@ public final class Ndef : NSObject {
      
      - Returns: A new UriRecord object with the same fields as the argument UriRecord object.
      */
-    public static func CreateUriRecord(other: UriRecord) -> UriRecord {
-        return UriRecord(other: other);
+    @objc public static func makeUriRecord(other: UriRecord) -> UriRecord {
+        return UriRecord(other: other)
     }
     
     
@@ -158,16 +147,16 @@ public final class Ndef : NSObject {
      - Returns: A new UriRecord object with the specified fields or nil if the
      fields are invalid.
      */
-    public static func CreateUriRecord(payload: [UInt8], id: [UInt8]?) -> UriRecord? {
+    @objc public static func makeUriRecord(payload: [UInt8], id: [UInt8]?) -> UriRecord? {
         do {
-            return try UriRecord(payload: payload, id: id);
-        } catch UriRecord.UriRecordValidationError.payloadTooLong {
-            print("Error: payload exceeds maximum length.");
+            return try UriRecord(payload: payload, id: id)
+        } catch UriRecordValidationError.payloadTooLong {
+            NSLog("Error: payload exceeds maximum length.")
         } catch {
-            print("Unexpected error: \(error).");
+            NSLog("Unexpected error: \(error).")
         }
         
-        return nil;
+        return nil
     }
     
     
@@ -179,8 +168,8 @@ public final class Ndef : NSObject {
      - Returns: A new UriRecord object with the specified payload or nil if the payload
      argument is invalid.
      */
-    public static func CreateUriRecord(payload: [UInt8]) -> UriRecord? {
-        return CreateUriRecord(payload: payload, id: nil);
+    @objc public static func makeUriRecord(payload: [UInt8]) -> UriRecord? {
+        return makeUriRecord(payload: payload, id: nil)
     }
     
     
@@ -193,8 +182,8 @@ public final class Ndef : NSObject {
      - Returns: A new UriRecord object with the specified payload or nil if the payload
      argument is invalid.
      */
-    public static func CreateUriRecord(uri: String, id: String?) -> UriRecord {
-        return UriRecord(uri: uri, id: id);
+    @objc public static func makeUriRecord(uri: String, id: String?) -> UriRecord {
+        return UriRecord(uri: uri, id: id)
     }
     
     
@@ -205,14 +194,13 @@ public final class Ndef : NSObject {
      
      - Returns: A new UriRecord object with the specified information.
      */
-    public static func CreateUriRecord(uri: String) -> UriRecord {
-        return CreateUriRecord(uri: uri, id: nil);
+    @objc public static func makeUriRecord(uri: String) -> UriRecord {
+        return makeUriRecord(uri: uri, id: nil)
     }
     
     
     
-    /* Generic record methods */
-    
+    // MARK: - Generic record methods
     
     /**
      Creates a GenericRecord by copying the fields of an existing GenericRecord object.
@@ -221,8 +209,8 @@ public final class Ndef : NSObject {
      
      - Returns: A new GenericRecord object with the same fields as the argument GenericRecord object.
      */
-    public static func CreateGenericRecord(other: GenericRecord) -> GenericRecord {
-        return GenericRecord(other: other);
+    @objc public static func makeGenericRecord(other: GenericRecord) -> GenericRecord {
+        return GenericRecord(other: other)
     }
     
     
@@ -237,17 +225,17 @@ public final class Ndef : NSObject {
      
      - Returns: A new GenericRecord object with the specified fields.
      */
-    public static func CreateGenericRecord(tnf: Ndef.TypeNameFormat, type: [UInt8],
-                                           payload: [UInt8], id: [UInt8]?) -> GenericRecord? {
+    @objc public static func makeGenericRecord(tnf: TypeNameFormat, type: [UInt8],
+                                        payload: [UInt8], id: [UInt8]?) -> GenericRecord? {
         do {
-            return try GenericRecord(tnf: tnf.rawValue, type: type, payload: payload, id: id);
-        } catch GenericRecord.GenericRecordValidationError.payloadTooLong {
-            print("Error: payload exceeds maximum length.");
+            return try GenericRecord(tnf: tnf.rawValue, type: type, payload: payload, id: id)
+        } catch GenericRecordValidationError.payloadTooLong {
+            NSLog("Error: payload exceeds maximum length.")
         } catch {
-            print("Unexpected error: \(error).");
+            NSLog("Unexpected error: \(error).")
         }
         
-        return nil;
+        return nil
     }
     
     
@@ -261,22 +249,21 @@ public final class Ndef : NSObject {
      
      - Returns: A new GenericRecord object with the specified fields.
      */
-    public static func CreateGenericRecord(tnf: Ndef.TypeNameFormat, type: [UInt8], payload: [UInt8]) -> GenericRecord? {
-        return CreateGenericRecord(tnf: tnf, type: type, payload: payload, id: nil);
+    @objc public static func makeGenericRecord(tnf: TypeNameFormat, type: [UInt8], payload: [UInt8]) -> GenericRecord? {
+        return makeGenericRecord(tnf: tnf, type: type, payload: payload, id: nil)
     }
     
     
     
-    /* NDEF message methods */
-    
+    // MARK: - NDEF message methods
     
     /**
      Creates an empty NdefMessage object.
      
      - Returns: A new NdefMessage object with zero records.
      */
-    public static func CreateNdefMessage() -> NdefMessage {
-        return NdefMessage();
+    @objc public static func makeNdefMessage() -> NdefMessage {
+        return NdefMessage()
     }
     
     
@@ -287,8 +274,8 @@ public final class Ndef : NSObject {
      
      - Returns: A new NdefMessage object containing the specified records.
      */
-    public static func CreateNdefMessage(records: [NdefRecord]) -> NdefMessage {
-        return NdefMessage(records: records);
+    @objc public static func makeNdefMessage(records: [NdefRecord]) -> NdefMessage {
+        return NdefMessage(records: records)
     }
     
     
@@ -299,15 +286,16 @@ public final class Ndef : NSObject {
      
      - Returns: A new NdefMessage object containing the specified records.
      */
-    public static func CreateNdefMessage(rawByteArray: [UInt8]) -> NdefMessage? {
+    @objc public static func makeNdefMessage(rawByteArray: [UInt8]) -> NdefMessage? {
         do {
-            return try NdefMessage(rawByteArray: rawByteArray);
-        } catch let e as NdefMessage.MessageParsingError {
-            print("NdefMessage parsing error at index \(e.index) of \(e.rawBytes): \(e.kind)");
+            return try NdefMessage(rawByteArray: rawByteArray)
+        } catch let e as NdefMessageParsingError {
+            NSLog("NdefMessage parsing error at index \(e.index) of \(e.rawBytes): \(e.kind)")
         } catch {
-            print("Error parsing NDEF message: \(error)");
+            NSLog("Error parsing NDEF message: \(error)")
         }
         
-        return nil;
+        return nil
     }
+    
 }

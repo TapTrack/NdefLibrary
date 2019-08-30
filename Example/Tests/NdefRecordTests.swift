@@ -24,7 +24,7 @@ class NdefRecordTests: XCTestCase {
         let helloWorldRecordHeader : [UInt8] = [0b11010001, 0x01, 0x11, 0x54];
         let helloWorldRecordPayload : [UInt8] = [0x02, 0x65, 0x6E, 0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77, 0x6F, 0x72, 0x6C, 0x64, 0x21, 0x21, 0x21];
         
-        let helloWorldRecord = Ndef.CreateTextRecord(payload: helloWorldRecordPayload);
+        let helloWorldRecord = Ndef.makeTextRecord(payload: helloWorldRecordPayload);
         XCTAssertNotNil(helloWorldRecord);
         
         let expectedRawRecord : [UInt8] = helloWorldRecordHeader + helloWorldRecordPayload;
@@ -39,7 +39,7 @@ class NdefRecordTests: XCTestCase {
         let text : String = "hello world!!!";
         let id : String = "greeting"; // 0x67, 0x72, 0x65, 0x65, 0x74, 0x69, 0x6e, 0x67
         
-        let helloWorldRecord = Ndef.CreateTextRecord(textEncoding: TextRecord.TextEncodingType.Utf8, languageCode: languageCode, text: text, id: id);
+        let helloWorldRecord = Ndef.makeTextRecord(textEncoding: TextEncodingType.Utf8, languageCode: languageCode, text: text, id: id);
         XCTAssertNotNil(helloWorldRecord);
         
         let expectedRawRecord : [UInt8] = helloWorldRecordHeader + helloWorldRecordPayload;
@@ -50,7 +50,7 @@ class NdefRecordTests: XCTestCase {
         let githubUrlRecordHeader : [UInt8] = [0b11010001, 0x01, 0x0C, 0x55];
         let githubUrlRecordPayload : [UInt8] = [0x02, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2E, 0x63, 0x6F, 0x6D, 0x2F];
         
-        let githubUrlRecord = Ndef.CreateUriRecord(payload: githubUrlRecordPayload);
+        let githubUrlRecord = Ndef.makeUriRecord(payload: githubUrlRecordPayload);
         XCTAssertNotNil(githubUrlRecord);
         
         let expectedRawRecord : [UInt8] = githubUrlRecordHeader + githubUrlRecordPayload;
@@ -64,7 +64,7 @@ class NdefRecordTests: XCTestCase {
         let url : String = "https://www.github.com/";
         let id : String = "octocat"; // 0x6f, 0x63, 0x74, 0x6f, 0x63, 0x61, 0x74
         
-        let githubUrlRecord = Ndef.CreateUriRecord(uri: url, id: id)
+        let githubUrlRecord = Ndef.makeUriRecord(uri: url, id: id)
         XCTAssertNotNil(githubUrlRecord);
         
         let expectedRawRecord : [UInt8] = githubUrlRecordHeader + githubUrlRecordPayload;
@@ -84,11 +84,11 @@ class NdefRecordTests: XCTestCase {
         }
         let expectedRawRecord : [UInt8] = longRecordHeader + longRecordPayload;
         
-        let longRecord1 = Ndef.CreateTextRecord(payload: longRecordPayload);
+        let longRecord1 = Ndef.makeTextRecord(payload: longRecordPayload);
         XCTAssertNotNil(longRecord1);
         XCTAssert(longRecord1!.toByteArray(messageBegin: true, messageEnd: true, chunked: false) == expectedRawRecord);
         
-        let longRecord2 = Ndef.CreateTextRecord(textEncoding: TextRecord.TextEncodingType.Utf8, languageCode: languageCode, text: longRecordText);
+        let longRecord2 = Ndef.makeTextRecord(textEncoding: TextEncodingType.Utf8, languageCode: languageCode, text: longRecordText);
         XCTAssertNotNil(longRecord2);
         XCTAssert(longRecord2!.toByteArray(messageBegin: true, messageEnd: true, chunked: false) == expectedRawRecord);
     }
