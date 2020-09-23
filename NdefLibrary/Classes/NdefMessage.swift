@@ -207,7 +207,7 @@ public struct NdefMessageParsingError: Error {
                 type = Array(rawMessage[typeIndex..<(typeIndex + typeLength)])
             }
             
-            var idIndex = typeIndex
+            var idIndex = typeIndex + typeLength - 1
             if idLength > 0 {
                 idIndex += 1
                 guard idIndex < rawMessageLength else {
