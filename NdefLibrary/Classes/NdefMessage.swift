@@ -205,6 +205,7 @@ public struct NdefMessageParsingError: Error {
                     throw NdefMessageParsingError(index: recordStartIndex, rawBytes: rawMessage, kind: .typeFieldMissing)
                 }
                 type = Array(rawMessage[typeIndex..<(typeIndex + typeLength)])
+                typeIndex += typeLength - 1
             }
             
             var idIndex = typeIndex
@@ -214,6 +215,7 @@ public struct NdefMessageParsingError: Error {
                     throw NdefMessageParsingError(index: recordStartIndex, rawBytes: rawMessage, kind: .idFieldMissing)
                 }
                 id = Array(rawMessage[idIndex..<(idIndex + idLength)])
+                idIndex += idLength - 1
             }
             
             var payloadEndIndex = idIndex
